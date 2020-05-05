@@ -9,21 +9,65 @@ infrastructure_file = "../Resources/InfrastructureDevelopment.csv"
 # Define the function and have it accept the 'infrastructure_file' and 'greenhouse_file' as its parameters
 def extract(file):
     
-    #Read CSV files 
-    df = pd.read_csv(file)
-    print("Converting CSV to DataFrame for"+file+" successful")
-    return df
+     #Read CSV files 
+     df = pd.read_csv(file)
+     print("Converting CSV to DataFrame for"+file+" successful")
+     return df
     
-# def clean_data(df, columns_to_keep):
-#     df = [columns_to_keep].copy
-#     return
+ def transformations(df):
+     greenhouse_df = extract(greenhouse_file)
+     infrastructure_df = extract(infrastructure_file)
+     # set index for dataframes
+     df.set_index("id_no", inplace=True)
+     # remove duplicates
+     df.drop_duplicates("id_no", inplace=True)
+     # drop null values
+     df.dropna()
+     return df
 
-# def split_columns_transform(df, column, pat, suffixes):
-#  # Converts column into str and splits it on pat...
-# def load_df_into_dwh(film_df, tablename, schema, db_engine):
-#  return pd.to_sql(tablename, db_engine, schema=schema, if_exists="replace")
+ def clean_columns_greenhouse(greenhouse_df, greenhouse_columns):
+     greenhouse_df = transformations(df)
+     greenhouse_columns = ["GHG ID No. / No d'identification de GES", "Reference Year / Année de référence", "Facility City or District or Municipality / Ville ou District ou Municipalité de l'installation", "Facility Province or Territory / Province ou territoire de l'installation", "Latitude", "Longitude", "Total Emissions (tonnes CO2e) / Émissions totales (tonnes éq. CO2)"]
+     greenhouse_transformed= greenhouse_df[greenhouse_columns].copy()
+     greenhouse_transformed = greenhouse_transformed.rename(columns={"GHG ID No. / No d'identification de GES": "id_no",
+                                                          "Reference Year / Année de référence": "year",
+                                                          "Facility City or District or Municipality / Ville ou District ou Municipalité de l'installation": "area",
+                                                            "Facility Province or Territory / Province ou territoire de l'installation":"province",
+                                                               "Total Emissions (tonnes CO2e) / Émissions totales (tonnes éq. CO2)":"total_emissions",
+                                                               "Latitude": "latitude",
+                                                               "Longitude": "longitude"})
+    greenhouse_transformed_fil = greenhouse_transformed.loc[greenhouse_transformed["province"] == "Ontario"]
+    ghg = ghg.round({'latitude': 2, 'longitude': 2, 'total_emissions': 2})
+    return ghg
+    
+ def clean_columns_infrastructure(infrastructure_df, infratructure_columns):
+     infrastructure_df = transformations(df)
+     infratructure_columns = ["_id", "Project", "Status", "Result", "Area", "Estimated Total Budget", "Latitude", "Longitude"]
+     infrastructure_transformed = infrastructure_df[infratructure_columns].copy()
 
-# db_engines = { ... } # Needs to be configured
+     infrastructure_transformed = infrastructure_transformed.rename(columns={"_id": "id_no",
+                                                                       "Estimated Total Budget": "total_budget",
+                                                                       "Area": "area",
+                                                                       "Project": "project",
+                                                                       "Status": "status",
+                                                                       "Result": "result",
+                                                                       "Latitude": "latitude",
+                                                                        "Longitude": "longitude"})
+
+    infrastructure_transformed['province'] = 'Ontario'
+
+    inf = inf.round({'latitude': 2, 'longitude': 2})
+
+     return inf
+
+db_engines = { ... }
+
+def load():
+    ghg = clean_columns_greenhouse(ghg)
+    inf = clean_columns_infrastructure(inf)
+
+
+db_engines = { ... } # Needs to be configured
 
 # def etl():
 # 	# Extract
