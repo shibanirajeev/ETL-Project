@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Greenhouse Gas Emissions and Infrastructure Development</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+
+<table class="table table-striped">
+  <thead>
+      <tr>
+      <th scope="col">area</th>
+      <th scope="col">total_emissions</th>
+      <th scope="col">project</th>
+      <th scope="col">result</th>
+      <th scope="col">total_budget</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+        {% for row in list %}
+        <tr>
+            {% for value in row %}
+            <td>{{ value }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tr>
+  </tbody>
+
+</table>
+
+</html>
+
+
+

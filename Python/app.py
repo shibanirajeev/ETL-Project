@@ -5,7 +5,7 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
 import psycopg2
-from flask import Flask, jsonify
+from flask import Flask, render_template, jsonify
 
 
 #################################################
@@ -26,7 +26,7 @@ app = Flask(__name__)
 def view():
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM emissions_infrastructure LIMIT 10;")
+    cursor.execute("SELECT * FROM emissions_infrastructure LIMIT 100;")
     print(cursor)
 
     view_all=[]
@@ -38,19 +38,9 @@ def view():
 
     conn.close()
 
-    return jsonify(view_all)
+    return render_template("template.html", list=view_all)
 
+    #return jsonify(view_all)
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-# <table>
-# {%- for row in items|batch(3, '&nbsp;') %}
-#  <tr>
-#  {%- for column in row %}
-#    <td>{{ column }}</td>
-#  {%- endfor %}
-#  </tr>
-# {%- endfor %}
-# </table>
